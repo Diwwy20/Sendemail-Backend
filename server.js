@@ -16,7 +16,7 @@ connectDB();
 const app = express();
 
 app.use(cors({
-    origin: 'https://sendmail-frontend.onrender.com'
+    origin: '*'
 }));
 app.use(express.json());
 app.use(morgan('dev'));
