@@ -46,21 +46,28 @@ const sendEmail = async (req, res, next) => {
                     let replyMailOptions = {
                         from: process.env.SMTP_MAIL,
                         to: email,
-                        subject: `Reply ${subject}`,
-                        text: `เรียน คุณ  ${firstname}  ${lastname} เราได้รับ application แล้ว`
+                        subject: `You've applied for the ${position} position`,
+                        text: `Dear khun ${firstname} ${lastname} Received Application`,
+                        attachments: file ? [{
+                            filename: file.originalname,
+                            path: file.path
+                        }] : []
                     };
 
                     transporter.sendMail(replyMailOptions, function(replyError, replyInfo){
                         if(replyError){
-                            console.log(replyError);
+                            // console.log(replyError);
+                            return res.status(500).json({
+                                message: 'Failed to send reply email',
+                                error: error.toString()
+                            })
                         } 
-                        // else {
-                        //     console.log("Reply email sent successfully!");
-                        // }
-                    });
-
-                    return res.status(200).json({
-                        message: 'Email sent successfully'
+                        else {
+                            res.status(200).json({
+                                message: 'Email sent successfully',
+                                info: replyInfo
+                            })
+                        }
                     });
                 }
             });
